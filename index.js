@@ -71,22 +71,29 @@ async function connectionLogic() {
             if (message.message && message.message.conversation) {
                 console.log('Message Conversation:', message.message.conversation);
                 // Jika pesan adalah "Halo! Bisakah saya mendapatkan info selengkapnya tentang ini?"
-                if (message.message.conversation.toLocaleLowerCase() === 'info') {
-                    // Format pesan untuk dikirim
-                    const responseMessage1 = {
-                        text: '*Hallo, saya Rocket Bot🚀 Asisten kamu*.\nBerikut kumpulan informasi yang sudah kami siapkan'
-                    };
+                if (message.message.conversation) {
+                    const conversation = message.message.conversation;
 
-                    // Kirim pesan
-                    sock.sendMessage(message.key.remoteJid, responseMessage1);
+                    // Pattern regex untuk mencocokkan format pesan
+                    const regex = /Nama Lengkap\s*:\s*(.+)\nDomisili\s*:\s*(.+)\nUsia\s*:\s*(\d+)/i;
+                    const match = conversation.match(regex);
 
-                    setTimeout(() => {
-                        // Kirim pesan kedua
-                        const responseMessage2 = {
-                            text: "Silahkan ketik angka di bawah ini :\n📲Ketik 1 untuk info Legalitas\n📲Ketik 2 untuk info cara kerja\n📲Ketik 3 untuk info cara kerja antar kota\n📲Ketik 4 untuk info yang sudah galbay\n📲Ketik 5 untuk info ongkos jasa\n📲Ketik 6 untuk isi Form Pendaftaran\nAdmin akan segera merespon setelah pengisian Form Pendaftaran"
+                    if (match) {
+                        const [_, name, domisili, age] = match;
+
+                        const responseMessage1 = {
+                            text: `Halo ${name}, Saya Jilliyan Tim Edukasi Malahayati Consultant`
                         };
-                        sock.sendMessage(message.key.remoteJid, responseMessage2);
-                    }, 500);
+
+                        sock.sendMessage(message.key.remoteJid, responseMessage1);
+                        setTimeout(() => {
+                            // Kirim pesan kedua
+                            const responseMessage2 = {
+                                text: "Silahkan ketik angka di bawah ini untuk informasi lebih lanjut:\n📲Ketik 1 untuk info Legalitas\n📲Ketik 2 untuk info cara kerja\n📲Ketik 3 untuk info cara kerja antar kota\n📲Ketik 4 untuk info yang sudah galbay\n📲Ketik 5 untuk info ongkos jasa\n📲Ketik 6 untuk isi Form Pendaftaran\nAdmin akan segera merespon setelah pengisian Form Pendaftaran"
+                            };
+                            sock.sendMessage(message.key.remoteJid, responseMessage2);
+                        }, 500);
+                    }
                 }
                 if (validNumbers.includes(conversation)) {
                     if (message.message.conversation === '1') {
@@ -184,7 +191,7 @@ async function connectionLogic() {
                                 'Jenis Hp : \n' +
                                 'RAM HP (khusus Android) :\n' +
                                 'Simcard : (masih ada/ sudah tidak ada)\n' +
-                                'Rekomendasi : *Handoko Malahayati*\n\n' +
+                                'Rekomendasi : *Raffi Bekher*\n\n' +
                                 '𝗔𝗣𝗟𝗜𝗞𝗔𝗦𝗜 𝗬𝗔𝗡𝗚 𝗠𝗔𝗦𝗜𝗛 𝗕𝗘𝗥𝗝𝗔𝗟𝗔𝗡 / 𝗗𝗜𝗥𝗔𝗪𝗔𝗧 :\n' +
                                 '1. Nama aplikasi : \n' +
                                 '     Total Limit : \n' +
